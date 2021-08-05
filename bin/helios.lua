@@ -3,7 +3,9 @@
 local width, height = term.getSize()
 local helios = {}
 
-helios.startOpen = false
+helios.startMenu = {}
+helios.startMenu.open = false
+helios.startMenu.buttons = {}
 
 -- Graphics
 local wallpaper = paintutils.loadImage("/usr/wallpapers/win98.nfp")
@@ -11,10 +13,10 @@ local desktop = window.create(term.current(), 1, 1, width, height, true)
 local startMenu = window.create(term.current(), 1, height - 17, 17, 16, false)
 
 local startButton = buttons.createPush(desktop, 1, height - 1, 7, 2, function()
-    helios.startOpen = not helios.startOpen
-    startMenu.setVisible(helios.startOpen)
+    helios.startMenu.open = not helios.startMenu.open
+    startMenu.setVisible(helios.startMenu.open)
 
-    if not helios.startOpen then
+    if not helios.startMenu.open then
         desktop.redraw()
     end
 end )
@@ -49,6 +51,10 @@ function helios:drawBackground()
 end
 
 function helios:drawStartMenu()
+    -- Variables
+    local w, h = startMenu.getSize()
+
+    -- GUI
     startMenu.setCursorPos(1, 1)
     startMenu.setBackgroundColor(colors.lightGray)
     startMenu.setTextColor(colors.white)
@@ -60,8 +66,17 @@ function helios:drawStartMenu()
     startMenu.setCursorPos(1, 2)
     startMenu.clearLine()
 
-    startMenu.setCursorPos(17 / 2 - #"Helios" / 2 + 1, 2)
+    startMenu.setCursorPos(w / 2 - #"Helios" / 2 + 1, 2)
     startMenu.write("Helios")
+
+    -- Buttons
+    helios.startMenu.buttons.shutdown = buttons.createPush(startMenu, w / 2 - w / 4, h - 1, 10, 1, function() os.shutdown() end )
+    helios.startMenu.buttons.shutdown.text = "Shutdown"
+    helios.startMenu.buttons.shutdown:render()
+
+    helios.startMenu.buttons.reboot = buttons.createPush(startMenu, w / 2 - w / 4, h - 3, 10, 1, function() os.reboot() end )
+    helios.startMenu.buttons.reboot.text = "Reboot"
+    helios.startMenu.buttons.reboot:render()
 end
 
 function helios:main()
@@ -73,6 +88,13 @@ function helios:main()
         -- Read events
         local event = { os.pullEvent() }
         startButton:check(event)
+
+        if helios.startMenu.open then
+            -- Start menu is open, check the buttons
+            for k,v in pairs(helios.startMenu.buttons) do
+                v:check(event)
+            end
+        end
     end
 end
 

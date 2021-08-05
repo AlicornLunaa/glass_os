@@ -41,13 +41,16 @@ local PushButton = {
     end,
     check = function(self, event)
         -- Checks if the position given is clicking the button
+        local parentPos = { self.parent.getPosition() }
         local e = event[1]
+
+        if e ~= "mouse_click" and e ~= "mouse_up" then return end
+
         local side = event[2]
-        local x = event[3]
-        local y = event[4]
+        local x = event[3] - parentPos[1] + 1
+        local y = event[4] - parentPos[2] + 1
 
         if side ~= 1 then return end
-        if e ~= "mouse_click" and e ~= "mouse_up" then return end
 
         if e == "mouse_click" then
             if x < self.x + self.width and x >= self.x
@@ -107,13 +110,16 @@ local ToggleButton = {
     end,
     check = function(self, event)
         -- Checks if the position given is clicking the button
+        local parentPos = { self.parent.getPosition() }
         local e = event[1]
+
+        if e ~= "mouse_click" then return end
+
         local side = event[2]
-        local x = event[3]
-        local y = event[4]
+        local x = event[3] + parentPos[1] - 1
+        local y = event[4] + parentPos[2] - 1
 
         if side ~= 1 then return end
-        if e ~= "mouse_click" then return end
 
         if x < self.x + self.width and x >= self.x
             and y < self.y + self.height and y >= self.y then
