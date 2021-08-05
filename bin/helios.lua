@@ -1,16 +1,50 @@
 -- Helios is the default system GUI
-local b1 = buttons.createPush(2, 4, 12, 3, function()
+-- Variables
+local width, height = term.getSize()
+local helios = {}
+
+-- Graphics
+local wallpaper = paintutils.loadImage("/usr/wallpapers/win98.nfp")
+local startButton = buttons.createPush(1, height - 1, 7, 2, function()
+    
 end )
-b1.text = "PushButton"
-b1:render()
+startButton.color = colors.cyan
+startButton.activeColor = colors.blue
+startButton.text = "Start"
 
-local b2 = buttons.createToggle(16, 5, 12, 3, function() end, function() end )
-b2.text = "Toggle"
-b2.color = colors.blue
-b2:render()
+-- Functions
+function helios:drawBackground()
+    -- Resets the screen and draws the background
+    term.setCursorPos(1, 1)
+    term.setBackgroundColor(colors.lightBlue)
+    term.setTextColor(colors.white)
+    term.clear()
 
-while true do
-    local event = { os.pullEvent() }
-    b1:check(event)
-    b2:check(event)
+    term.setBackgroundColor(colors.blue)
+    term.setCursorPos(1, height - 0)
+    term.clearLine()
+    term.setCursorPos(1, height - 1)
+    term.clearLine()
+
+    paintutils.drawImage(wallpaper, 1, 1)
+
+    startButton:render()
 end
+
+function helios:drawDesktop()
+
+end
+
+function helios:main()
+    -- Main entrypoint
+    helios:drawBackground()
+
+    while true do
+        -- Read events
+        local event = { os.pullEvent() }
+        startButton:check(event)
+    end
+end
+
+-- Startup
+helios:main()
