@@ -1,5 +1,5 @@
 -- Helios bootloader
-print("Helios Bootloader v1.0")
+print("Glass Bootloader v1.0")
 
 -- Allows system programs to be executed anywhere
 shell.setPath(shell.path() .. ":/bin")
@@ -22,4 +22,4 @@ end
 sleep(0.25)
 term.setCursorPos(1, 1)
 term.clear()
-shell.run("helios.lua")
+shell.run("glass.lua")

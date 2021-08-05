@@ -1,11 +1,11 @@
--- Helios is the default system GUI
+-- glass is the default system GUI
 -- Variables
 local width, height = term.getSize()
-local helios = {}
+local glass = {}
 
-helios.startMenu = {}
-helios.startMenu.open = false
-helios.startMenu.buttons = {}
+glass.startMenu = {}
+glass.startMenu.open = false
+glass.startMenu.buttons = {}
 
 -- Graphics
 local wallpaper = paintutils.loadImage("/usr/wallpapers/win98.nfp")
@@ -13,10 +13,10 @@ local desktop = window.create(term.current(), 1, 1, width, height, true)
 local startMenu = window.create(term.current(), 1, height - 17, 17, 16, false)
 
 local startButton = buttons.createPush(desktop, 1, height - 1, 7, 2, function()
-    helios.startMenu.open = not helios.startMenu.open
-    startMenu.setVisible(helios.startMenu.open)
+    glass.startMenu.open = not glass.startMenu.open
+    startMenu.setVisible(glass.startMenu.open)
 
-    if not helios.startMenu.open then
+    if not glass.startMenu.open then
         desktop.redraw()
     end
 end )
@@ -25,7 +25,7 @@ startButton.activeColor = colors.blue
 startButton.text = "Start"
 
 -- Functions
-function helios:drawBackground()
+function glass:drawBackground()
     -- Resets the screen and draws the background
     desktop.setCursorPos(1, 1)
     desktop.setBackgroundColor(colors.black)
@@ -50,7 +50,7 @@ function helios:drawBackground()
     startButton:render(desktop)
 end
 
-function helios:drawStartMenu()
+function glass:drawStartMenu()
     -- Variables
     local w, h = startMenu.getSize()
 
@@ -66,32 +66,32 @@ function helios:drawStartMenu()
     startMenu.setCursorPos(1, 2)
     startMenu.clearLine()
 
-    startMenu.setCursorPos(w / 2 - #"Helios" / 2 + 1, 2)
-    startMenu.write("Helios")
+    startMenu.setCursorPos(w / 2 - #"Glass" / 2 + 1, 2)
+    startMenu.write("Glass")
 
     -- Buttons
-    helios.startMenu.buttons.shutdown = buttons.createPush(startMenu, w / 2 - w / 4, h - 1, 10, 1, function() os.shutdown() end )
-    helios.startMenu.buttons.shutdown.text = "Shutdown"
-    helios.startMenu.buttons.shutdown:render()
+    glass.startMenu.buttons.shutdown = buttons.createPush(startMenu, w / 2 - w / 4, h - 1, 10, 1, function() os.shutdown() end )
+    glass.startMenu.buttons.shutdown.text = "Shutdown"
+    glass.startMenu.buttons.shutdown:render()
 
-    helios.startMenu.buttons.reboot = buttons.createPush(startMenu, w / 2 - w / 4, h - 3, 10, 1, function() os.reboot() end )
-    helios.startMenu.buttons.reboot.text = "Reboot"
-    helios.startMenu.buttons.reboot:render()
+    glass.startMenu.buttons.reboot = buttons.createPush(startMenu, w / 2 - w / 4, h - 3, 10, 1, function() os.reboot() end )
+    glass.startMenu.buttons.reboot.text = "Reboot"
+    glass.startMenu.buttons.reboot:render()
 end
 
-function helios:main()
+function glass:main()
     -- Main entrypoint
-    helios:drawBackground()
-    helios:drawStartMenu()
+    glass:drawBackground()
+    glass:drawStartMenu()
 
     while true do
         -- Read events
         local event = { os.pullEvent() }
         startButton:check(event)
 
-        if helios.startMenu.open then
+        if glass.startMenu.open then
             -- Start menu is open, check the buttons
-            for k,v in pairs(helios.startMenu.buttons) do
+            for k,v in pairs(glass.startMenu.buttons) do
                 v:check(event)
             end
         end
@@ -99,4 +99,4 @@ function helios:main()
 end
 
 -- Startup
-helios:main()
+glass:main()
