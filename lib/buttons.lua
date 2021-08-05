@@ -18,24 +18,25 @@ local PushButton = {
 
         return b
     end,
-    render = function(self)
+    render = function(self, monitor)
         -- Draws the button to the screen
-        term.setCursorPos(self.x, self.y)
-        term.setTextColor(self.textColor)
+        local t = monitor and monitor or term
+        t.setCursorPos(self.x, self.y)
+        t.setTextColor(self.textColor)
 
         if self.active then
-            term.setBackgroundColor(self.activeColor)
+            t.setBackgroundColor(self.activeColor)
         else
-            term.setBackgroundColor(self.color)
+            t.setBackgroundColor(self.color)
         end
 
         for i = 0, self.height - 1 do
-            term.setCursorPos(self.x, self.y + i)
-            term.write(string.rep(" ", self.width))
+            t.setCursorPos(self.x, self.y + i)
+            t.write(string.rep(" ", self.width))
         end
 
-        term.setCursorPos(self.x + self.width / 2 - #self.text / 2, self.y + self.height / 2)
-        term.write(self.text)
+        t.setCursorPos(self.x + self.width / 2 - #self.text / 2, self.y + self.height / 2)
+        t.write(self.text)
     end,
     check = function(self, event)
         -- Checks if the position given is clicking the button
@@ -82,24 +83,25 @@ local ToggleButton = {
 
         return b
     end,
-    render = function(self)
+    render = function(self, monitor)
         -- Draws the button to the screen
-        term.setCursorPos(self.x, self.y)
-        term.setTextColor(self.textColor)
+        local t = monitor and monitor or term
+        t.setCursorPos(self.x, self.y)
+        t.setTextColor(self.textColor)
 
         if self.active then
-            term.setBackgroundColor(self.activeColor)
+            t.setBackgroundColor(self.activeColor)
         else
-            term.setBackgroundColor(self.color)
+            t.setBackgroundColor(self.color)
         end
 
         for i = 0, self.height - 1 do
-            term.setCursorPos(self.x, self.y + i)
-            term.write(string.rep(" ", self.width))
+            t.setCursorPos(self.x, self.y + i)
+            t.write(string.rep(" ", self.width))
         end
 
-        term.setCursorPos(self.x + self.width / 2 - #self.text / 2, self.y + self.height / 2)
-        term.write(self.text)
+        t.setCursorPos(self.x + self.width / 2 - #self.text / 2, self.y + self.height / 2)
+        t.write(self.text)
     end,
     check = function(self, event)
         -- Checks if the position given is clicking the button

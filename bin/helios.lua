@@ -6,7 +6,6 @@ local helios = {}
 -- Graphics
 local wallpaper = paintutils.loadImage("/usr/wallpapers/win98.nfp")
 local startButton = buttons.createPush(1, height - 1, 7, 2, function()
-    
 end )
 startButton.color = colors.cyan
 startButton.activeColor = colors.blue
