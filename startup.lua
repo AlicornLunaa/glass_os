@@ -22,3 +22,4 @@ end
 sleep(0.25)
 term.setCursorPos(1, 1)
 term.clear()
+shell.run("helios.lua")
