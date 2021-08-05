@@ -1,10 +1,11 @@
 -- Buttons API to make buttons easy
 -- Parent class
 local PushButton = {
-    new = function(self, x, y, width, height, func)
+    new = function(self, parent, x, y, width, height, func)
         local b = {}
         setmetatable(b, {__index = self})
 
+        b.parent = parent
         b.x = x
         b.y = y
         b.width = width
@@ -18,9 +19,9 @@ local PushButton = {
 
         return b
     end,
-    render = function(self, monitor)
+    render = function(self)
         -- Draws the button to the screen
-        local t = monitor and monitor or term
+        local t = self.parent and self.parent or term
         t.setCursorPos(self.x, self.y)
         t.setTextColor(self.textColor)
 
@@ -65,10 +66,11 @@ local PushButton = {
 }
 
 local ToggleButton = {
-    new = function(self, x, y, width, height, onFunc, offFunc)
+    new = function(self, parent, x, y, width, height, onFunc, offFunc)
         local b = {}
         setmetatable(b, {__index = self})
 
+        b.parent = parent
         b.x = x
         b.y = y
         b.width = width
@@ -83,9 +85,9 @@ local ToggleButton = {
 
         return b
     end,
-    render = function(self, monitor)
+    render = function(self)
         -- Draws the button to the screen
-        local t = monitor and monitor or term
+        local t = self.parent and self.parent or term
         t.setCursorPos(self.x, self.y)
         t.setTextColor(self.textColor)
 
@@ -129,10 +131,10 @@ local ToggleButton = {
 }
 
 -- Functions
-function createPush(x, y, width, height, func)
-    return PushButton:new(x, y, width, height, func)
+function createPush(parent, x, y, width, height, func)
+    return PushButton:new(parent, x, y, width, height, func)
 end
 
-function createToggle(x, y, width, height, onFunc, offFunc)
-    return ToggleButton:new(x, y, width, height, onFunc, offFunc)
+function createToggle(parent, x, y, width, height, onFunc, offFunc)
+    return ToggleButton:new(parent, x, y, width, height, onFunc, offFunc)
 end
