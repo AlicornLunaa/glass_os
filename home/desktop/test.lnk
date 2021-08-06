@@ -1,0 +1,5 @@
+{
+    name = "Test",
+    command = "test.lua",
+    hidden = false
+}

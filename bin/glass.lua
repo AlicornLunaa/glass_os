@@ -7,6 +7,8 @@ glass.startMenu = {}
 glass.startMenu.open = false
 glass.startMenu.buttons = {}
 
+glass.applications = {}
+
 -- Graphics
 local wallpaper = paintutils.loadImage("/usr/wallpapers/win98.nfp")
 local desktop = window.create(term.current(), 1, 1, width, height, true)
@@ -48,6 +50,11 @@ function glass:drawBackground()
     end
 
     startButton:render(desktop)
+
+    -- Render each application
+    for k, v in pairs(glass.applications) do
+        v.btn:render(desktop)
+    end
 end
 
 function glass:drawStartMenu()
@@ -79,8 +86,33 @@ function glass:drawStartMenu()
     glass.startMenu.buttons.reboot:render()
 end
 
+function glass:loadApps()
+    -- Load applications into memory
+    local space = 0
+
+    for k,v in pairs(fs.list("/home/desktop/")) do
+        local path = fs.combine("/home/desktop/", v)
+
+        if not fs.isDir(path) then
+            -- Load app
+            local f = fs.open(path, "r")
+            local data = textutils.unserialise(f.readAll())
+            f.close()
+
+            if not data.hidden then
+                glass.applications[#glass.applications + 1] = data
+                glass.applications[#glass.applications].btn = buttons.createPush(desktop, 2 + space, 2, #data.name + 2, 2, function() shell.run(data.command) end )
+                glass.applications[#glass.applications].btn.text = data.name
+
+                space = space + #data.name + 3
+            end
+        end
+    end
+end
+
 function glass:main()
     -- Main entrypoint
+    glass:loadApps()
     glass:drawBackground()
     glass:drawStartMenu()
 
@@ -88,6 +120,10 @@ function glass:main()
         -- Read events
         local event = { os.pullEvent() }
         startButton:check(event)
+
+        for k,v in pairs(glass.applications) do
+            v.btn:check(event)
+        end
 
         if glass.startMenu.open then
             -- Start menu is open, check the buttons
