@@ -43,6 +43,10 @@ function installGlass(parent)
     local pkg = textutils.unserialiseJSON(getHttpData(masterBranch .. "/package.json"))
     print(" Done!")
 
+    local f = fs.open(parent .. "/package.json", "w")
+    f.write(textutils.serializeJSON(pkg))
+    f.close()
+
     -- Create directories listed
     if pkg then
         print("Creating file structure...")
@@ -106,6 +110,7 @@ function updateGlass()
                 print("Update complete!")
             else
                 print("Update unsuccessful.")
+                fs.delete("/temp")
             end
         else
             print("Skipping update.")
@@ -115,15 +120,11 @@ function updateGlass()
     end
 end
 
-function validateGlass()
-
-end
-
 -- Entrypoint
 local function main()
     -- Check which argument was supplied
     if #args < 1 then
-        print("Usage: glass_installer (install/update/validate)")
+        print("Usage: glass_installer (install/update)")
         return
     end
 
@@ -131,10 +132,8 @@ local function main()
         installGlass()
     elseif args[1] == "update" then
         updateGlass()
-    elseif args[1] == "validate" then
-        validateGlass()
     else
-        print("Invalid argument.\nUsage: glass_installer (install/update/validate)")
+        print("Invalid argument.\nUsage: glass_installer (install/update)")
     end
 end
 

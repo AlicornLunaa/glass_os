@@ -22,4 +22,6 @@ end
 sleep(0.25)
 term.setCursorPos(1, 1)
 term.clear()
-shell.run("glass.lua")
+
+shell.run("glass_installer", "update")
+shell.run("glass")
