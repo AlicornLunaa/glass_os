@@ -52,6 +52,9 @@ function installGlass()
             f.close()
         end
         print("Done!")
+
+        -- Move installer into the bin folder
+        fs.move("./glass_installer.lua", "/bin/")
     else
         print("Unknown error!")
         return
