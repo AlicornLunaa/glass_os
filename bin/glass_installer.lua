@@ -11,7 +11,7 @@ function checkHttp()
         return false
     end
 
-    print("Connection to Github ok.")
+    print("Connection to Github OK.")
     return true
 end
 
@@ -24,10 +24,19 @@ function getHttpData(url)
     return data
 end
 
-function installGlass()
+function getFileData(url)
+    local f = fs.open(url, "r")
+    local data = f.readAll()
+    f.close()
+
+    return data
+end
+
+function installGlass(parent)
     -- Get all the files from github
     print("Installing Glass...")
-    if not checkHttp() then return end
+    if not checkHttp() then return false end
+    parent = parent or ""
 
     -- Obtain the package information for which files to download
     term.write("Getting package details...")
@@ -39,30 +48,72 @@ function installGlass()
         print("Creating file structure...")
         for _,v in pairs(pkg.directories) do
             print("Creating directory " .. v)
-            fs.makeDir(v)
+            fs.makeDir(parent .. v)
         end
         print("Done!")
 
         print("Downloading files...")
         for _,v in pairs(pkg.files) do
             print("Downloading file " .. v)
-            local data = getHttpData(pkg.masterUrl .. pkg.files)
-            local f = fs.open(v, "w")
+            local data = getHttpData(pkg.masterUrl .. v)
+            local f = fs.open(parent .. v, "w")
             f.write(data)
             f.close()
         end
         print("Done!")
 
         -- Move installer into the bin folder
-        fs.move("./glass_installer.lua", "/bin/")
+        fs.move("./glass_installer.lua", parent .. "/bin/")
+        return true
     else
         print("Unknown error!")
-        return
+        return false
     end
 end
 
 function updateGlass()
+    -- Get all the files from github
+    print("Checking for updates...")
+    if not checkHttp() then return end
 
+    -- Obtain the package information for which files to download
+    term.write("Getting newest version...")
+    local publicVersion = tonumber(getHttpData(masterBranch .. "/version.txt"))
+    local f = fs.open("/version.txt", "r")
+    local deviceVersion = tonumber(f.readAll())
+    f.close()
+    print(" Done!\nNewest version: " .. publicVersion .. "\nCurrent version: " .. deviceVersion .. "\n")
+
+    -- Continue with update
+    if publicVersion > deviceVersion then
+        print("New update available.\nWould you like to continue? (Y/N) ")
+        local res = read()
+
+        if string.lower(res) == "y" then
+            print("Updating Glass...")
+
+            fs.makeDir("/temp")
+            if installGlass("/temp") then
+                -- Update worked, remove the temporary directory with all the new files and move it to root
+                local pkg = textutils.unserialiseJSON(getFileData("/package.json"))
+
+                for _,v in pairs(pkg.files) do
+                    fs.delete(v)
+                end
+
+                fs.move("/temp/*", "/")
+                fs.delete("/temp")
+
+                print("Update complete!")
+            else
+                print("Update unsuccessful.")
+            end
+        else
+            print("Skipping update.")
+        end
+    else
+        print("No new updates.")
+    end
 end
 
 function validateGlass()
@@ -79,9 +130,9 @@ local function main()
 
     if args[1] == "install" then
         installGlass()
-    elseif args[2] == "update" then
+    elseif args[1] == "update" then
         updateGlass()
-    elseif args[3] == "validate" then
+    elseif args[1] == "validate" then
         validateGlass()
     else
         print("Invalid argument.\nUsage: glass_installer (install/update/validate)")
