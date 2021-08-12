@@ -1,0 +1,18 @@
+{
+    "masterUrl": "https://raw.githubusercontent.com/AlicornLunaa/glass_os/master",
+    "directories": [
+        "/bin",
+        "/home",
+        "/home/desktop",
+        "/lib",
+        "/usr",
+        "/usr/wallpapers"
+    ],
+    "files": [
+        "/bin/glass.lua",
+        "/bin/touch.lua",
+        "/lib/buttons.lua",
+        "/startup.lua",
+        "/version.txt"
+    ]
+}
