@@ -1,5 +1,5 @@
--- Helios bootloader
-print("Glass Bootloader v1.0")
+-- Glass bootloader
+print("Glass Bootloader v1.1")
 
 -- Allows system programs to be executed anywhere
 shell.setPath(shell.path() .. ":/bin")
@@ -11,11 +11,15 @@ for k, v in pairs(fs.list("/lib")) do
 end
 
 -- Load all the services
+local processes = {}
 for k, v in pairs(fs.list("/services")) do
     print("Loading service: " .. v)
 
-    local c = coroutine.create(shell.run)
-    coroutine.resume(c, fs.combine("/services", v))
+    local function startService()
+        shell.run(fs.combine("/services", v))
+    end
+
+    processes[#processes + 1] = startService
 end
 
 -- Finish
@@ -23,5 +27,9 @@ sleep(0.25)
 term.setCursorPos(1, 1)
 term.clear()
 
-shell.run("glass_installer", "update")
-shell.run("glass")
+-- Start Glass
+processes[#processes + 1] = function()
+    shell.run("glass_installer", "update")
+    shell.run("glass")
+end
+parallel.waitForAny(unpack(processes))

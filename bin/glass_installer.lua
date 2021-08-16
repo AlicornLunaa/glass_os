@@ -40,12 +40,15 @@ function installGlass(parent)
 
     -- Obtain the package information for which files to download
     term.write("Getting package details...")
-    local pkg = textutils.unserialiseJSON(getHttpData(masterBranch .. "/package.json"))
-    print(" Done!")
+    local pkg = getHttpData(masterBranch .. "/package.json")
 
     local f = fs.open(parent .. "/package.json", "w")
-    f.write(textutils.serializeJSON(pkg))
+    f.write(pkg)
     f.close()
+
+    pkg = textutils.unserialiseJSON(pkg)
+    print(" Done!")
+    print(pkg)
 
     -- Create directories listed
     if pkg then
