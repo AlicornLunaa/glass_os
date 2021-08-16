@@ -4,8 +4,9 @@ local width, height = term.getSize()
 local glass = {}
 
 glass.homeScreen = {}
-glass.homeScreen.open = false
+glass.homeScreen.open = true
 glass.homeScreen.page = 1
+glass.homeScreen.maxPages = 17
 glass.applications = {}
 
 -- Graphics
@@ -18,11 +19,27 @@ local homeButton = buttons.createPush(desktop, width / 2 - 3, height - 1, 7, 2, 
 
     if not glass.homeScreen.open then
         desktop.redraw()
+    else
+        glass.homeScreen.page = 1
     end
 end )
 homeButton.color = colors.cyan
 homeButton.activeColor = colors.blue
 homeButton.text = "Start"
+
+local leftButton = buttons.createPush(desktop, 1, height - 1, 3, 2, function()
+    glass.homeScreen.page = math.max(1, glass.homeScreen.page - 1)
+end )
+leftButton.color = colors.cyan
+leftButton.activeColor = colors.blue
+leftButton.text = "<"
+
+local rightButton = buttons.createPush(desktop, width - 2, height - 1, 3, 2, function()
+    glass.homeScreen.page = math.min(glass.homeScreen.maxPages, glass.homeScreen.page + 1)
+end )
+rightButton.color = colors.cyan
+rightButton.activeColor = colors.blue
+rightButton.text = ">"
 
 -- Functions
 function glass:drawBackground()
@@ -48,6 +65,8 @@ function glass:drawBackground()
     desktop.clearLine()
 
     homeButton:render(desktop)
+    leftButton:render(desktop)
+    rightButton:render(desktop)
 
     -- Render each application
     for k, v in pairs(glass.applications) do
@@ -85,9 +104,19 @@ function glass:main()
     glass:drawBackground()
 
     while true do
+        -- Show page
+        desktop.redraw()
+        if glass.homeScreen.open then
+            local txt = string.format("%d/%d", glass.homeScreen.page, glass.homeScreen.maxPages)
+            term.setCursorPos(width - #txt + 1, 1)
+            term.write(txt)
+        end
+
         -- Read events
         local event = { os.pullEvent() }
         homeButton:check(event)
+        leftButton:check(event)
+        rightButton:check(event)
 
         for k,v in pairs(glass.applications) do
             v.btn:check(event)

@@ -15,12 +15,14 @@ local PushButton = {
         b.textColor = colors.white
         b.text = ""
         b.active = false
+        b.visible = true
         b.func = func
 
         return b
     end,
     render = function(self)
         -- Draws the button to the screen
+        if not self.visible then return end
         local t = self.parent and self.parent or term
         t.setCursorPos(self.x, self.y)
         t.setTextColor(self.textColor)
@@ -83,6 +85,7 @@ local ToggleButton = {
         b.textColor = colors.white
         b.text = ""
         b.active = false
+        b.visible = true
         b.onFunc = onFunc
         b.offFunc = offFunc
 
@@ -90,6 +93,7 @@ local ToggleButton = {
     end,
     render = function(self)
         -- Draws the button to the screen
+        if not self.visible then return end
         local t = self.parent and self.parent or term
         t.setCursorPos(self.x, self.y)
         t.setTextColor(self.textColor)
