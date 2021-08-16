@@ -10,7 +10,7 @@ glass.startMenu.buttons = {}
 glass.applications = {}
 
 -- Graphics
-local wallpaper = paintutils.loadImage("/usr/wallpapers/win98.nfp")
+local wallpaper = paintutils.loadImage("/usr/wallpapers/desktop_win98.nfp")
 local desktop = window.create(term.current(), 1, 1, width, height, true)
 local startMenu = window.create(term.current(), 1, height - 17, 17, 16, false)
 

@@ -30,6 +30,14 @@ term.clear()
 -- Start Glass
 processes[#processes + 1] = function()
     shell.run("glass_installer", "update")
-    shell.run("glass")
+
+    -- Start glass depending on type of computer
+    local w,h = term.getSize()
+
+    if w <= 26 then
+        shell.run("glass_mobile")
+    else
+        shell.run("glass_desktop")
+    end
 end
 parallel.waitForAny(unpack(processes))

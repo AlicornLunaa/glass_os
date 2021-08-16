@@ -4,6 +4,7 @@
         "/bin",
         "/home",
         "/home/desktop",
+        "/home/documents",
         "/lib",
         "/services",
         "/usr",
@@ -11,8 +12,13 @@
     ],
     "files": [
         "/bin/glass.lua",
+        "/bin/glass_desktop.lua",
+        "/bin/glass_mobile.lua",
         "/bin/touch.lua",
+        "/bin/test.lua",
         "/lib/buttons.lua",
+        "/usr/wallpapers/desktop_win98.nfp",
+        "/usr/wallpapers/mobile_hearts.nfp",
         "/startup.lua",
         "/version.txt"
     ]
