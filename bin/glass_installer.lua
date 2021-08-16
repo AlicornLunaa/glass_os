@@ -18,10 +18,15 @@ end
 function getHttpData(url)
     -- Gets a file from HTTP protocol and returns the data
     local res = http.get(url)
-    local data = res.readAll()
-    res.close()
 
-    return data
+    if res then
+        local data = res.readAll()
+        res.close()
+
+        return data
+    end
+
+    return ""
 end
 
 function getFileData(url)
