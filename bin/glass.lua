@@ -34,12 +34,6 @@ function glass:drawBackground()
     desktop.setTextColor(colors.white)
     desktop.clear()
 
-    desktop.setBackgroundColor(colors.blue)
-    desktop.setCursorPos(1, height - 0)
-    desktop.clearLine()
-    desktop.setCursorPos(1, height - 1)
-    desktop.clearLine()
-
     for i,row in pairs(wallpaper) do
         desktop.setCursorPos(1, i)
 
@@ -48,6 +42,12 @@ function glass:drawBackground()
             desktop.write(" ")
         end
     end
+
+    desktop.setBackgroundColor(colors.blue)
+    desktop.setCursorPos(1, height - 0)
+    desktop.clearLine()
+    desktop.setCursorPos(1, height - 1)
+    desktop.clearLine()
 
     startButton:render(desktop)
 
